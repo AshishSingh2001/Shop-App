@@ -3,7 +3,7 @@ import 'package:shop_app/models/product.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
-  Product product;
+  final Product product;
 
   ProductItem(this.product);
 
@@ -14,9 +14,7 @@ class ProductItem extends StatelessWidget {
       child: GridTile(
         child: GestureDetector(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (ctx) => ProductDetailScreen(product.title)),
-            );
+            Navigator.of(context).pushNamed(ProductDetailScreen.routeName,arguments: product.id);
           },
           child: Image.network(
             product.imageUrl,
