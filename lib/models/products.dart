@@ -40,6 +40,10 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
+  List<Product> get favorites {
+    return [...items.where((element) => element.isFavorite).toList()];
+  }
+
   Product findById(String id) {
     return items.firstWhere((element) => element.id == id);
   }
