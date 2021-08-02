@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:shop_app/models/http_exception.dart';
 import '../providers/product.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -110,10 +111,10 @@ class Products with ChangeNotifier {
 
   Future<void> updateProduct(String id, Product newProduct) async {
     final url = Uri.parse(
-        'https://flutter-update-e6815-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json');
+        'https://flutter-update-e6815-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json ');
 
     try {
-      var res = await http.patch(
+      await http.patch(
         url,
         body: json.encode(
           {
@@ -125,20 +126,37 @@ class Products with ChangeNotifier {
           },
         ),
       );
+      final index = _items.indexWhere((element) => element.id == id);
+      if (index >= 0) {
+        _items[index] = newProduct;
+      }
+      notifyListeners();
       // print(json.decode(res.body));
     } catch (e) {
       // print(e);
       throw (e);
     }
-    final index = _items.indexWhere((element) => element.id == id);
-    if (index >= 0) {
-      _items[index] = newProduct;
-    }
-    notifyListeners();
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((element) => element.id == id);
+  Future<void> deleteProduct(String id) async {
+    final url = Uri.parse(
+        'https://flutter-update-e6815-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id');
+    final existingProductIndex =
+        _items.indexWhere((element) => element.id == id);
+    Product? existingProduct = _items[existingProductIndex];
+    _items.removeAt(existingProductIndex);
     notifyListeners();
+
+    final res = await http.delete(url);
+    if (res.statusCode >= 400) {
+      _items.insert(
+        existingProductIndex,
+        existingProduct,
+      );
+      notifyListeners();
+      throw HttpException('Could not delete message');
+    } else {
+      existingProduct = null;
+    }
   }
 }
