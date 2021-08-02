@@ -35,7 +35,6 @@ class UserProductItem extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
-                var confirmDelete = false;
                 showDialog(
                   context: context,
                   builder: (ctx) {
