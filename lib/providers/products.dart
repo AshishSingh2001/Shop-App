@@ -78,7 +78,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    var url = Uri.parse(
+    final url = Uri.parse(
         'https://flutter-update-e6815-default-rtdb.asia-southeast1.firebasedatabase.app/products.json');
     try {
       var res = await http.post(
@@ -108,12 +108,33 @@ class Products with ChangeNotifier {
     }
   }
 
-  void updateProduct(String id, Product newProduct) {
+  Future<void> updateProduct(String id, Product newProduct) async {
+    final url = Uri.parse(
+        'https://flutter-update-e6815-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json');
+
+    try {
+      var res = await http.patch(
+        url,
+        body: json.encode(
+          {
+            'title': newProduct.title,
+            'description': newProduct.description,
+            'imageUrl': newProduct.imageUrl,
+            'price': newProduct.price,
+            'isFavorite': newProduct.isFavorite,
+          },
+        ),
+      );
+      // print(json.decode(res.body));
+    } catch (e) {
+      // print(e);
+      throw (e);
+    }
     final index = _items.indexWhere((element) => element.id == id);
     if (index >= 0) {
       _items[index] = newProduct;
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   void deleteProduct(String id) {
