@@ -25,8 +25,19 @@ class ProductItem extends StatelessWidget {
         footer: GridTileBar(
           leading: Consumer<Product>(
             builder: (ctx, product, _) => IconButton(
-              onPressed: () {
-                product.toggleFavoriteStatus();
+              onPressed: () async {
+                try {
+                  await product.toggleFavoriteStatus();
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Adding to favorite failed',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                }
               },
               icon: Icon(
                 product.isFavorite ? Icons.favorite : Icons.favorite_border,

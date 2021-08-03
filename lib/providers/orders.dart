@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shop_app/providers/cart.dart';
+import 'package:http/http.dart' as http;
 
 class OrderItem {
   final String id;
@@ -22,7 +25,18 @@ class Orders with ChangeNotifier {
     return _orders;
   }
 
-  void addOrder(List<CartItem> cartProducts, double total) {
+  void addOrder(List<CartItem> cartProducts, double total) async {
+    final url = Uri.parse(
+        'https://flutter-update-e6815-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json');
+
+    try {
+      await http.post(
+        url,
+        body: json.encode(
+          {},
+        ),
+      );
+    } catch (e) {}
     _orders.insert(
       0,
       OrderItem(
