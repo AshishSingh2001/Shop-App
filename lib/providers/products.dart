@@ -67,7 +67,7 @@ class Products with ChangeNotifier {
               id: prodId,
               title: prodData['title'],
               description: prodData['description'],
-              price: prodData['price'],
+              price: double.parse(prodData['price']),
               imageUrl: prodData['imageUrl'],
             ));
           },
@@ -106,7 +106,7 @@ class Products with ChangeNotifier {
       _items.add(newPrdoduct);
       notifyListeners();
     } catch (e) {
-      print(e);
+      // print(e);
       throw (e);
     }
   }
