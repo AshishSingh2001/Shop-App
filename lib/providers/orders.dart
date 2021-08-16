@@ -26,17 +26,19 @@ class Orders with ChangeNotifier {
   }
 
   String authToken = '';
+  String userId = '';
 
   void update({
-    required String? newAuth,
-    // required List<OrderItem> prevOrders,
+    required String newAuth,
+    required String newId,
   }) {
-    authToken = newAuth!;
+    authToken = newAuth;
+    userId = newId;
   }
 
   Future<void> fetchAndSetOrders() async {
     final url = Uri.parse(
-      'https://flutter-update-e6815-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json?auth=$authToken',
+      'https://flutter-update-e6815-default-rtdb.asia-southeast1.firebasedatabase.app/orders/$userId.json?auth=$authToken',
     );
 
     var res = await http.get(url);
@@ -70,7 +72,7 @@ class Orders with ChangeNotifier {
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     final url = Uri.parse(
-        'https://flutter-update-e6815-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json?auth=$authToken');
+        'https://flutter-update-e6815-default-rtdb.asia-southeast1.firebasedatabase.app/orders/$userId.json?auth=$authToken');
     final timestamp = DateTime.now();
 
     final response = await http.post(

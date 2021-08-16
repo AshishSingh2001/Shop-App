@@ -28,8 +28,8 @@ class MyApp extends StatelessWidget {
           update: (ctx, auth, previousState) {
             return previousState!
               ..update(
-                newAuth: auth.token!,
-                newId: auth.userId!, 
+                newAuth: auth.token ?? '',
+                newId: auth.userId ?? '',
               );
           },
         ),
@@ -38,8 +38,11 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProxyProvider<Auth, Orders>(
           create: (_) => Orders(),
-          update: (ctx, auth, previousState) =>
-              previousState!..update(newAuth: auth.token),
+          update: (ctx, auth, previousState) => previousState!
+            ..update(
+              newAuth: auth.token!,
+              newId: auth.userId!,
+            ),
         ),
       ],
       child: Consumer<Auth>(

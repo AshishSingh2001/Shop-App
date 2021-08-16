@@ -46,7 +46,6 @@ class Products with ChangeNotifier {
   void update({
     required String newAuth,
     required String newId,
-    // required List<Product> prevItems,
   }) {
     // _items = prevItems;
     authToken = newAuth;
@@ -65,9 +64,11 @@ class Products with ChangeNotifier {
     return items.firstWhere((element) => element.id == id);
   }
 
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
     final url = Uri.parse(
-      'https://flutter-update-e6815-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=$authToken',
+      'https://flutter-update-e6815-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=$authToken&$filterString',
     );
     final favUrl = Uri.parse(
       'https://flutter-update-e6815-default-rtdb.asia-southeast1.firebasedatabase.app/userFavorites/$userId.json?auth=$authToken',
@@ -89,7 +90,7 @@ class Products with ChangeNotifier {
               description: prodData['description'],
               price: prodData['price'],
               imageUrl: prodData['imageUrl'],
-              isFavorite: favData.isEmpty? false: favData[prodId] ?? false ,
+              isFavorite: favData == null ? false : favData[prodId] ?? false,
             ));
           },
         );
@@ -114,6 +115,7 @@ class Products with ChangeNotifier {
             'description': product.description,
             'imageUrl': product.imageUrl,
             'price': product.price,
+            'creatorId': userId,
           },
         ),
       );

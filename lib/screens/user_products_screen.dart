@@ -9,12 +9,13 @@ class UserProductScreen extends StatelessWidget {
   static const routeName = '/user-products';
 
   Future<void> _refreshProducts(BuildContext context) async {
-    await Provider.of<Products>(context, listen: false).fetchAndSetProducts();
+    await Provider.of<Products>(context, listen: false)
+        .fetchAndSetProducts(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final productsData = Provider.of<Products>(context);
+    // final productsData = Provider.of<Products>(context); will give a infinite loop with refressProducts
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Products'),
@@ -26,28 +27,43 @@ class UserProductScreen extends StatelessWidget {
               icon: const Icon(Icons.add))
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () {
-          return _refreshProducts(context);
+      body: FutureBuilder(
+        future: _refreshProducts(context),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return RefreshIndicator(
+              onRefresh: () {
+                return _refreshProducts(context);
+              },
+              child: Consumer<Products>(
+                builder: (ctx, productsData, child) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                      itemBuilder: (_, index) {
+                        return Column(
+                          children: [
+                            UserProductItem(
+                              id: productsData.items[index].id,
+                              title: productsData.items[index].title,
+                              imageUrl: productsData.items[index].imageUrl,
+                            ),
+                            Divider(),
+                          ],
+                        );
+                      },
+                      itemCount: productsData.items.length,
+                    ),
+                  );
+                },
+               ),
+            );
+          }
         },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView.builder(
-            itemBuilder: (_, index) {
-              return Column(
-                children: [
-                  UserProductItem(
-                    id: productsData.items[index].id,
-                    title: productsData.items[index].title,
-                    imageUrl: productsData.items[index].imageUrl,
-                  ),
-                  Divider(),
-                ],
-              );
-            },
-            itemCount: productsData.items.length,
-          ),
-        ),
       ),
       drawer: AppDrawer(),
     );
