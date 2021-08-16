@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/auth.dart';
 import '../providers/cart.dart';
 import '../providers/product.dart';
 import '../screens/product_detail_screen.dart';
@@ -9,6 +10,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
+    final auth = Provider.of<Auth>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -27,16 +29,16 @@ class ProductItem extends StatelessWidget {
             builder: (ctx, product, _) => IconButton(
               onPressed: () async {
                 try {
-                  await product.toggleFavoriteStatus();
+                  await product.  toggleFavoriteStatus(auth.token, auth.userId);
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Adding to favorite failed',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      );
+                    SnackBar(
+                      content: Text(
+                        'Adding to favorite failed',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
                 }
               },
               icon: Icon(
