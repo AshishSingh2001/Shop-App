@@ -1,16 +1,16 @@
-# shop_app
+# Shop app
 
-A new Flutter project.
+A simple app using **JWT**, **Firebase Realtime Database** and **Provider**
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+### Authentication
+- Login with Email and Password
+- Persist JWT across sessions
+- Auto logout when the token expires
 
-A few resources to get you started if this is your first Flutter project:
+### User
+- Add products and manage your own products
+- Favorite the products you like
+- Add to cart and see your previous orders
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
