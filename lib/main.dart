@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/screens/splash_screen.dart';
-import 'package:shop_app/screens/auth_screen.dart';
-import 'package:shop_app/screens/products_overview_screen.dart';
-
+import 'package:shop_app/helpers/custom_route.dart';
+import './screens/splash_screen.dart';
+import './screens/auth_screen.dart';
+import './screens/products_overview_screen.dart';
 import './providers/orders.dart';
 import './screens/cart_screen.dart';
 import './screens/edit_product_screen.dart';
@@ -13,8 +13,12 @@ import './providers/cart.dart';
 import './providers/products.dart';
 import './screens/product_detail_screen.dart';
 import './providers/auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  await dotenv.load(fileName: '.env');
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -50,10 +54,13 @@ class MyApp extends StatelessWidget {
         builder: (ctx, auth, _) => MaterialApp(
           title: 'MyShop',
           theme: ThemeData(
-            primarySwatch: Colors.purple,
-            accentColor: Colors.deepOrange,
-            fontFamily: 'lato',
-          ),
+              primarySwatch: Colors.purple,
+              accentColor: Colors.deepOrange,
+              fontFamily: 'lato',
+              pageTransitionsTheme: PageTransitionsTheme(builders: {
+                TargetPlatform.android: CustomPageTransitionBuilder(),
+                TargetPlatform.iOS: CustomPageTransitionBuilder(),
+              })),
           home: auth.isAuth
               ? ProductsOverviewScreen()
               : FutureBuilder(

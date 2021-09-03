@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/models/http_exception.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Auth with ChangeNotifier {
+  final String firebaeKey = dotenv.env['FIREBASE_KEY']!;
   String? _token;
   DateTime? _expiryDate;
   String? _userId;
@@ -32,7 +34,7 @@ class Auth with ChangeNotifier {
   Future<void> _authenticate(
       String email, String password, String urlSegment) async {
     final url = Uri.parse(
-      'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyAF3aFx_OjYvo7dRJN2JqbOhSa3KAwyELk',
+      'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=$firebaeKey',
     );
     try {
       final response = await http.post(
